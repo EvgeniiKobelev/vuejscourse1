@@ -2,6 +2,7 @@ const App = {
   data() {
     return {
       activeIndex: 0, // то, что позволяет определить текущий активный шаг
+      isActive: true,
       steps: [
         {
           title: "Основы",
@@ -28,31 +29,27 @@ const App = {
           text:
             "Одним из наиболее важных обновлений в Vue 3 является появление альтернативного синтаксиса Composition API. В этом блоке вы узнаете все, чтобы полностью пользоваться данными синтаксисом на практических примерах. Помимо этого вы узнаете как работать совместно с Vue Router и Vuex.",
         },
-        {
-          title: "Готово",
-          text: "Изучили!",
-        },
       ],
-      button: "Вперед",
-      value: [1, 2, 3, 4, 5],
     };
   },
   methods: {
     prev() {
       // когда нажимаем кнопку назад
-      this.activeIndex = this.activeIndex - 1;
+      if (this.activeIndex !== 0) {
+        this.activeIndex--;
+      }
     },
     reset() {
       // начать заново
       this.activeIndex = 0;
+      this.isActive = true;
     },
     nextOfFinish() {
       // кнопка вперед или закончить
-      this.activeIndex = this.activeIndex + 1;
-      if (this.activeIndex == 4) {
-        this.button = "закончить";
+      if (this.activeIndex !== this.steps.length - 1) {
+        this.activeIndex++;
       } else {
-        this.button = "вперед";
+        this.isActive = false;
       }
     },
     setActive(idx) {
@@ -61,10 +58,15 @@ const App = {
     },
   },
   computed: {
-    // тут стоит определить несколько свойств:
-    // 1. текущий выбранный шаг
-    // 2. выключена ли кнопка назад
-    // 3. находимся ли мы на последнем шаге
+    activeStep() {
+      return this.steps[this.activeIndex];
+    },
+    prevDisabled() {
+      return this.activeIndex === 0;
+    },
+    isLastStep() {
+      return this.activeIndex === this.steps.length - 1;
+    },
   },
 };
 
